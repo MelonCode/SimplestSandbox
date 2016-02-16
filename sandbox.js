@@ -6,7 +6,7 @@ var ctx = render.getContext('2d');
 ctx.imageSmoothingEnabled = false;
 display.imageSmoothingEnabled = false;
 
-// Если ничего нет - возвращаем обычный таймер
+// Supporting old browsers
 window.requestAnimFrame = (function () {
     return window.requestAnimationFrame ||
         window.webkitRequestAnimationFrame ||
@@ -17,6 +17,14 @@ window.requestAnimFrame = (function () {
             window.setTimeout(callback, 1000 / 60);
         };
 })();
+
+var map = [];
+
+var MAP_WIDTH = 200;
+var MAP_HEIGHT = 150;
+
+//Left mouse button pressed
+var lmb = false;
 
 var materials = [
     {
@@ -29,11 +37,16 @@ var materials = [
     }
 ];
 
-var MAP_WIDTH = 200;
-var MAP_HEIGHT = 150;
+//Render scale
+var scale = 4;
+
+var mousePos = {
+    x: 0,
+    y: 0
+};
 
 
-var map = [];
+
 function genMap() {
     for (var x = 0; x <= MAP_WIDTH; x++) {
         map[x] = [];
@@ -43,22 +56,15 @@ function genMap() {
             else map[x][y] = 0;
         }
     }
-    console.log()
 }
 
 
-var scale = 4;
-var mousePos = mousePos = {
-    x: 0,
-    y: 0
-};
 function drawDebug() {
     display.font = "18px Arial";
     display.fillText("Mouse X:" + mousePos.x, 5, 20);
     display.fillText("Mouse Y:" + mousePos.y, 5, 40);
     display.fillText("Left Button: " + (lmb ? "Down" : "Up"), 5, 60);
 }
-
 
 canvas.addEventListener('mousemove', function (evt) {
     var rect = canvas.getBoundingClientRect();
@@ -68,7 +74,7 @@ canvas.addEventListener('mousemove', function (evt) {
     };
 }, false);
 
-var lmb = false;
+
 
 canvas.addEventListener('mouseup', function (evt) {
     lmb = false;
@@ -122,7 +128,15 @@ function physics() {
     }
 }
 
+function interact() {
+    if (lmb) {
+        for (var i = 0; i < 6; i++) {
+            map[Math.floor(mousePos.x / scale + Math.random() * 3)][Math.floor(mousePos.y / scale + Math.random() * 3)] = 1;
+        }
+    }
+}
 
+//Simplyfing work with pixels 
 function setPixel(imageData, x, y, r, g, b, a) {
     var index = (x + y * imageData.width) * 4;
     imageData.data[index] = r;
@@ -133,13 +147,6 @@ function setPixel(imageData, x, y, r, g, b, a) {
 
 genMap();
 setInterval(physics, 20);
-function interact() {
-    if (lmb) {
-        for (var i = 0; i < 6; i++) {
-            map[Math.floor(mousePos.x / scale + Math.random() * 3)][Math.floor(mousePos.y / scale + Math.random() * 3)] = 1;
-        }
-    }
-}
 setInterval(interact, 100);
 draw();
 
