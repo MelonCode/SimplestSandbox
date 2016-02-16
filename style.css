@@ -1,0 +1,18 @@
+body {
+    /*background-color: whitesmoke;*/
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none;   /* Chrome/Safari/Opera */
+    -khtml-user-select: none;    /* Konqueror */
+    -moz-user-select: none;      /* Firefox */
+    -ms-user-select: none;       /* IE/Edge */
+    user-select: none;           /* non-prefixed version, currently
+                                  not supported by any browser */
+    background-color: black;
+}
+
+canvas {
+    outline: 1px dashed gray;
+    background-color: rgb(255, 0, 39);
+    /*background-color: rgb(12, 0, 39);*/
+
+}
